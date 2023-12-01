@@ -131,7 +131,7 @@ def create_radar_map_two(map_users_data, geojson, featureidkey, data_type, title
 
     
 
-    # Update map settings to make it radar-style
+    #map settings to make it radar-style
     fig.update_geos(
         projection_type="azimuthal equidistant",
         center={"lat": 24, "lon": 80},
@@ -180,7 +180,7 @@ def fetch_statewise_transaction_amount(selected_year,selected_state,mydb):
     return data_statewise_amount_transactions
 
 
-#query's for data ovrview page   --------------------------------------------------------------------------------------------------
+#query's for data overview page   --------------------------------------------------------------------------------------------------
 
 
 
@@ -287,19 +287,134 @@ transactions_states_db = connect_to_database("india_state_transaction")
 users_states_db = connect_to_database("india_state_users")
 map_overall_transactions_db = connect_to_database("map_overall_transactions")
 map_overall_users_db = connect_to_database("map_overall_users")
-# map_statewise_transactions_db = connect_to_database("map_states_transaction_db")
 map_statewise_users_db=connect_to_database("map_users_state_db")
-# map_statewis_count_transactions_db = connect_to_database("map_states_transaction_db")
 
 
 
 
-# Sidebar for user interaction
+# Sidebar for user interaction for pages 
 st.sidebar.title("Select Data Type")
 selected_data_type = st.sidebar.selectbox("Choose Data Type", ["Introduction","Users", "Transactions","Data Visualization","Data Overview"])
 
 
 
+
+# Introduction page 
+if selected_data_type == "Introduction":
+    
+    # Define PhonePe brand colors
+    phonepe_colors = {
+        "primary": "#15AB2A",  # Green
+        "secondary": "#EC1C24",  # Red
+        "accent": "#FFD101",  # Yellow
+    }
+
+    # Custom CSS for styling
+    custom_css = f"""
+        <style>
+            .phonepe-primary-text {{
+                color: {phonepe_colors["primary"]};
+            }}
+            .phonepe-secondary-text {{
+                color: {phonepe_colors["secondary"]};
+            }}
+            .phonepe-accent-text {{
+                color: {phonepe_colors["accent"]};
+            }}
+        </style>
+    """
+
+    # Render custom CSS
+    st.markdown(custom_css, unsafe_allow_html=True)
+
+    # Introduction page content
+    st.title("Welcome to PhonePe Pulse Analytics")
+    st.markdown(
+        """
+        <p class="phonepe-primary-text">PhonePe Pulse is your personalized financial insight center.</p>
+        <p class="phonepe-secondary-text">Understand Your Transactions, Manage Your Finances!</p>
+        """
+        ,
+        unsafe_allow_html=True
+    )
+
+    # Introduction about PhonePe Pulse
+    st.header("Introduction About PhonePe Pulse:")
+    st.write(
+        """
+        PhonePe Pulse is a feature within the PhonePe mobile payments app in India, offering insights and trends on user transactions and spending behavior. Users access PhonePe Pulse to understand their financial activities and track spending habits.
+        """
+    )
+
+    # PhonePe Payment Types
+    st.header("PhonePe Payment Types:")
+    st.markdown(
+        """
+        - **Peer-to-Peer Payments:** Users can send money to friends and family.
+            - *Examples:* Splitting a meal bill, sharing expenses, or assisting someone in need.
+
+        - **Recharge & Bill Payments:** Users can conveniently pay utility bills, mobile recharges, and more.
+            - *Examples:* Settling electricity, water, gas bills, mobile top-ups, and credit card payments.
+
+        - **Merchant Payments:** Users can make purchases and payments at various merchants and businesses, online and offline.
+            - *Examples:* Grocery shopping, online retail, dining at restaurants, or paying for transportation services.
+
+        - **Financial Services:** PhonePe offers a range of financial services, including mutual fund investments, insurance purchases, and digital gold buying.
+            - *Examples:* Investing in mutual funds, acquiring health or life insurance, and purchasing digital gold.
+
+        - **Others:** This category covers miscellaneous transactions and services.
+            - *Examples:* Donations to charities, online shopping returns, or unique financial transactions.
+        """
+    )
+
+    # Objective
+    st.header("Objective:")
+    st.write(
+        """
+        The project aims to extract, process, and visualize data from the PhonePe Pulse GitHub repository. The primary objectives include data extraction, transformation, MySQL database storage, and the creation of an interactive geo visualization dashboard using Streamlit and Plotly. Users can explore various metrics and statistics with dropdown options.
+        """
+    )
+
+    # Data Sources
+    st.header("Data Sources:")
+    st.write(
+        """
+        The primary data source is the PhonePe Pulse GitHub repository, containing transaction and spending behavior data.
+        """
+    )
+
+    # Scope
+    st.header("Scope:")
+    st.write(
+        """
+        The project scope includes data extraction, transformation, MySQL database storage, dashboard development, data integration, user interaction, security, and efficiency.
+        """
+    )
+
+    # Methodology
+    st.header("Methodology:")
+    st.write(
+        """
+        - **Data Loading:** Loaded data from the Git repository into Pandas DataFrames.
+        - **Data Transformation:** Cleaned and prepare data, handle missing values, and ensure data consistency.
+        - **Data Storage:** Created a MySQL database to store processed data securely.
+        - **Visualization Dashboard:** Developed an interactive dashboard with dropdown menus and interactive components.
+        - **Data Integration:** Connected the dashboard to the MySQL database for data retrieval.
+        - **Data Visualization:** Generated charts and maps using Matplotlib and Seaborn.
+        - **Security and Efficiency:** Ensured data security and optimize data retrieval and visualization.
+        - **User-Friendly Interface:** Designed a visually appealing and user-friendly dashboard.
+        """
+    )
+
+    # Benefits
+    st.header("Benefits:")
+    st.write(
+        """
+        The project provides users with insightful financial tracking, a user-friendly dashboard, a personalized experience, data security, convenient access to financial insights, and efficient financial management.
+        """
+    )
+
+#============================================================================================================================================
 
 # Check if the user selected "Users" data type
 if selected_data_type == "Users":
@@ -358,14 +473,14 @@ if selected_data_type == "Users":
         fig4, (ax5, ax6) = plt.subplots(1, 2, figsize=(10, 6))
         
 
-        # Registered Users
+        # Registered Users(pie chart)
         registered_users_value = state_users_data['Registered_Users'].iloc[0]  # Assuming the value is the same for all rows
         ax5.pie([registered_users_value], labels=[f'Registered Users'], startangle=90,colors='red', wedgeprops={'edgecolor': 'black', 'linewidth': 1, 'linestyle': 'solid', 'antialiased': True})
         ax5.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle
         ax5.set_title(f'Registered Users for {selected_state}, {selected_year}')
         ax5.text(0, 0, registered_users_value, fontsize=18, color='white', va='center', ha='center')
 
-        # App Opens
+        # App Opens([pie chart])
         app_opens_value = state_users_data['App_Opens'].iloc[0]  # Assuming the value is the same for all rows
         ax6.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
         ax6.set_title(f'App Opens for {selected_state}, {selected_year}')
@@ -405,13 +520,17 @@ if selected_data_type == "Users":
         # Display the subplots using Streamlit
         st.pyplot(fig5)
 
-                        
+
+#=========================================================================================================================================
+
+
 #Transactions
 
 
 # Check if the user selected "Transactions" data type
 
 if selected_data_type == "Transactions":
+    
     # Add a selectbox to choose the year within the "Transactions" section
     selected_year = st.selectbox("Choose a Year", ["2018", "2019", "2020", "2021", "2022", "2023"])
 
@@ -517,7 +636,7 @@ if selected_data_type == "Transactions":
         st.pyplot(fig3)
 
 
-if selected_data_type == "Data_Visualization":
+if selected_data_type == "Data Visualization":
     
     # Fetch the state map data from the URL using requests
     india_states_map_url = "https://gist.githubusercontent.com/jbrobst/56c13bbbf9d97d187fea01ca62ea5112/raw/e388c4cae20aa53cb5090210a42ebb9b765c0a36/india_states.geojson"
@@ -527,30 +646,30 @@ if selected_data_type == "Data_Visualization":
     # Create a Streamlit app
     st.title("Indian States Wise Choropleth Maps")
 
-    # Get user input for the year
-    selected_year = st.selectbox("Choose a Year", ["2018", "2019", "2020", "2021", "2022", "2023"])
+    #slider for years
+    selected_year_slider = st.select_slider("Choose a Year", options=["2018", "2019", "2020", "2021", "2022", "2023"])
+
     
     # Fetch data for the amount map
-    data_amount = fetch_data_for_year(selected_year, map_overall_transactions_db, "Amount")
+    data_amount = fetch_data_for_year(selected_year_slider, map_overall_transactions_db, "Amount")
     
     # Create a radar-style map for the amount
     col1, col2 = st.columns(2)
+    
     with col1:
-        st.subheader("Overall Transaction Amount Indian State Wise")
+        st.subheader(f"Overall Transaction Amount Indian State Wise for Year {selected_year_slider}")
         st.write("Amount represents the overall transaction amount for each state")
         st.plotly_chart(create_radar_map(data_amount, india_states_map, 'properties.ST_NM', 'Amount', 'Amount'), use_container_width=True)
 
     # Fetch data for the count map
-    data_count = fetch_data_for_year(selected_year, map_overall_transactions_db, "Count")
+    data_count = fetch_data_for_year(selected_year_slider, map_overall_transactions_db, "Count")
 
     # Create a radar-style map for the count
     with col2:
-        st.subheader("Overall Transaction Count Indian State Wise")
+        st.subheader(f"Overall Transaction Count Indian State Wise for Year {selected_year_slider}")
         st.write("Count represents the overall transaction count for each state")
         st.plotly_chart(create_radar_map(data_count, india_states_map, 'properties.ST_NM', 'Count', 'Count'), use_container_width=True)
 
-    #slider for years
-    selected_year_slider = st.select_slider("Choose a Year", options=["2018", "2019", "2020", "2021", "2022", "2023"])
 
 
     col3,col4 =st.columns(2)
@@ -559,7 +678,7 @@ if selected_data_type == "Data_Visualization":
 
     
     with col3:
-        st.subheader("Overall Registered Users Indian State Wise")
+        st.subheader(f"Overall Registered Users Indian State Wise for Year {selected_year_slider}")
         st.write("Registered Users represents the overall registered users of phonepay pulse for each state")
         st.plotly_chart(create_radar_map_two(map_registeredusers, india_states_map, 'properties.ST_NM', 'RegisteredUsers', 'Registered Users'), use_container_width=True)
 
@@ -567,7 +686,7 @@ if selected_data_type == "Data_Visualization":
     map_app_opens=fetch_data_for_overall_users(selected_year_slider,map_overall_users_db, "AppOpens")
 
     with col4:
-        st.subheader("Overall App Opens Indian State Wise")
+        st.subheader(f"Overall App Opens Indian State Wise for Year {selected_year_slider} ")
         st.write("App Opens represents the overall app opens of phonepay pulse for each state")
         st.plotly_chart(create_radar_map_two(map_app_opens, india_states_map, 'properties.ST_NM', 'AppOpens', 'App Opens'), use_container_width=True)
 
@@ -578,7 +697,7 @@ if selected_data_type == "Data_Visualization":
     selected_state = st.selectbox("Choose a State", ["Andaman & Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Dadra & Nagar Haveli & Daman & Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu & Kashmir", "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"], key="state_selector")
 
     # Map statewise users data
-    st.title("Statewise Registered Users and App Opens ")
+    st.title(f"Registered Users and App Opens for Districts of  {selected_state} in year {selected_year} ")
 
     # Connect to the database
     mydb = connect_to_database("map_users_state_db")
@@ -642,7 +761,7 @@ if selected_data_type == "Data_Visualization":
 
 
     # Title for the transaction section
-    st.title("Statewise Transaction Count and Amount ")
+    st.title(f"Count  and Amount for Districts of  {selected_state} in year {selected_year} ")
 
     # Connect to the database
     mydb = connect_to_database("map_states_transactions")
@@ -692,7 +811,7 @@ if selected_data_type == "Data_Visualization":
     else:
         st.write("Failed to connect to the database")
 
-
+#========================================================================================================================================
 
 if selected_data_type == "Data Overview":
 
@@ -746,11 +865,11 @@ if selected_data_type == "Data Overview":
 
             table_data_north_south = fetch_count_north_south(year, category, mydb)
 
-            # Define the lists of North and South Indian states
+            # lists of North and South Indian states
             north_states = ['maharashtra', 'uttar pradesh', 'rajasthan', 'madhya pradesh', 'bihar', 'odisha', 'west bengal']
             south_states = ['karnataka', 'telangana', 'andhra pradesh', 'tamil nadu']
 
-            # Assume table_data_north_south is your DataFrame
+
             north_states_df = table_data_north_south[table_data_north_south['Locations'].str.strip().isin(north_states)]
             south_states_df = table_data_north_south[table_data_north_south['Locations'].str.strip().isin(south_states)]
 
@@ -759,11 +878,11 @@ if selected_data_type == "Data Overview":
             st.write(south_states_df)
 
 
-            # Sum the counts for North states
+            # Sum counts for North states
             north_states_count = north_states_df['Count'].sum()
             south_states_count = south_states_df['Count'].sum()
 
-            # Display the results using st.write
+        
             st.write(f"Total Transaction Counts in North Indian states: {north_states_count}")
             st.write(f"Total Transaction Counts in South Indian states: {south_states_count}")
 
@@ -782,14 +901,14 @@ if selected_data_type == "Data Overview":
 
             table_statewise_top = fetch_statewise_highcount(year, state, category, mydb)
 
-            # Create a pivot table
+            # pivot table
             heatmap = table_statewise_top.pivot(index='Locations', columns='Type', values='Count')
 
-            # Create the heatmap using Seaborn
+            # heatmap using Seaborn
             plt.figure(figsize=(12, 8))  # Adjust the figure size as needed
             sns.heatmap(heatmap, annot=True, fmt="", cmap="YlGnBu")
 
-            # Add labels and title
+           
             plt.xlabel('Type')
             plt.ylabel(f"{category}")
             plt.title(f'Heatmap of Transaction Counts at {state}  in {year}')
@@ -806,7 +925,6 @@ if selected_data_type == "Data Overview":
     
             sns.set_palette(cus_palette)
 
-            # sns.set(rc={'xtick.labelsize': 15})
             
             ax10 = sns.barplot(data = table_statewise_top_amount,x ='Locations' , y = 'Amount')
 
